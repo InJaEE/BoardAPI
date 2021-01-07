@@ -3,8 +3,8 @@
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:Timegate!@@localhost:3306/prisma_test"
-  // url      = env("DATABASE_URL")
+  // url      = "mysql://user:password@localhost:3306/db"
+  url = env("DATABASE_URL")
 }
 
 generator client {
