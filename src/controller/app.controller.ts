@@ -11,11 +11,6 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-  @Get('/user')
-  async getUsers(): Promise<User[]> {
-    const users = await prisma.user.findMany();
-    return users;
-  }
   @Post('/user')
   async createUser(@Body() body) {
     const { name, email } = body;
