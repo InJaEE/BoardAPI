@@ -6,18 +6,22 @@ import {
   Param,
   Post,
   Put,
+  Redirect,
+  Res,
 } from '@nestjs/common';
-import { UserService } from '../service/user.service';
+import { UserService } from './user.service';
 
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get()
-  getUsers() {
+  getUsers(@Res({ passthrough: true }) res) {
+    // res.status(252).send('hello !');
+    res.status(252);
     return this.userService.getUsers();
   }
   @Get(':name')
-  async getUser(@Param() param) {
+  getUser(@Param() param) {
     return this.userService.getUser(param);
   }
   @Post()
@@ -25,11 +29,11 @@ export class UserController {
     return this.userService.createUser(body);
   }
   @Put()
-  async updateUser(@Body() body) {
+  updateUser(@Body() body) {
     return this.userService.updateUser(body);
   }
   @Delete()
-  async deleteUser(@Body() body) {
+  deleteUser(@Body() body) {
     return this.userService.deleteUser(body);
   }
 }

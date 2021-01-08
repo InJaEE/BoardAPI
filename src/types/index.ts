@@ -3,3 +3,9 @@ export interface User {
   email: string;
   name: string;
 }
+
+export interface ResMsg {
+  data?: any;
+  status: number;
+  message: string;
+}

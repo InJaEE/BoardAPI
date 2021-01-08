@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { AppService } from '../service/app.service';
+import { AppService } from './app.service';
 import prisma from '../database/database';
 import { User } from '../types';
 

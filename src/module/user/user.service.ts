@@ -1,29 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import prisma from '../database/database';
-import { User } from '../types';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import prisma from '../../database/database';
+import { CreateUserDto } from './dto';
+
+import { User, ResMsg } from '../../types';
 
 @Injectable()
 export class UserService {
   async getUsers(): Promise<User[]> {
-    try {
-      const users = await prisma.user.findMany();
-      return users;
-    } catch (err) {
-      console.error(err);
-    }
+    const users = await prisma.user.findMany();
+    console.log(users);
+    return users;
   }
-  async getUser(param): Promise<User> {
+  async getUser(param): Promise<ResMsg | NotFoundException> {
     const { name } = param;
-    try {
-      const user = await prisma.user.findFirst({
-        where: { name },
-      });
-      return user;
-    } catch (err) {
-      console.error(err);
+    const user = await prisma.user.findFirst({
+      where: { name },
+    });
+    if (!user) {
+      throw new NotFoundException('Error occured!');
     }
+    return {
+      data: user,
+      status: 200,
+      message: 'Success',
+    };
   }
-  async createUser(body) {
+  async createUser(body: CreateUserDto) {
     const { name, email } = body;
     try {
       await prisma.user.create({
@@ -37,7 +39,7 @@ export class UserService {
       console.error(err);
     }
   }
-  async updateUser(body) {
+  async updateUser(body: CreateUserDto): Promise<string> {
     const { id, name, email } = body;
     try {
       await prisma.user.update({
