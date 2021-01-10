@@ -17,3 +17,9 @@ export function auth(req: Request, res: Response, next: NextFunction) {
   // if(!req.user.isAdmin)
   next();
 }
+
+export function setToken(req: Request, res: Response, next: NextFunction) {
+  const jwt = '#12345%';
+  // req.token = jwt;
+  next();
+}

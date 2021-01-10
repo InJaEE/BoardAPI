@@ -1,11 +1,47 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Req } from '@nestjs/common';
 import prisma from '../../database/database';
 import { CreateUserDto } from './dto';
-
 import { User, ResMsg } from '../../types';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
+  signup({ email, name, password }) {
+    bcrypt.hash(password, 10, async (err, encrypted) => {
+      if (err) {
+        return console.error(err);
+      }
+      try {
+        await prisma.user.create({
+          data: {
+            email,
+            name,
+            password: encrypted,
+          },
+        });
+        return 'Success';
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  }
+  async login({ email, password }, req) {
+    const user = await prisma.user.findFirst({
+      where: { email },
+    });
+    bcrypt.compare(password, user.password, (err, isSame) => {
+      console.log('isSame?:', isSame);
+      if (err) {
+        return console.error(err);
+      }
+      if (isSame) {
+        console.log(req.session);
+      }
+    });
+  }
+  logout() {
+    return '';
+  }
   async getUsers(): Promise<User[]> {
     const users = await prisma.user.findMany();
     console.log(users);
@@ -24,20 +60,6 @@ export class UserService {
       status: 200,
       message: 'Success',
     };
-  }
-  async createUser(body: CreateUserDto) {
-    const { name, email } = body;
-    try {
-      await prisma.user.create({
-        data: {
-          name,
-          email,
-        },
-      });
-      return `User ${name}, ${email} create success!`;
-    } catch (err) {
-      console.error(err);
-    }
   }
   async updateUser(body: CreateUserDto): Promise<string> {
     const { id, name, email } = body;
