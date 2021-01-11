@@ -8,7 +8,9 @@ import {
   Put,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+//import { LocalAuthGuard } from '../auth/local-auth.guard';
 import { UserService } from './user.service';
 
 @Controller('/user')
@@ -18,9 +20,12 @@ export class UserController {
   signup(@Body() body) {
     return this.userService.signup(body);
   }
+  //@UseGuards(LocalAuthGuard)
   @Post('/login')
   login(@Body() body, @Req() req) {
-    return this.userService.login(body, req);
+    console.log(req.session);
+    // return this.userService.login(body, req);
+    return req;
   }
   @Get('/logout')
   logout() {

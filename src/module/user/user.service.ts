@@ -25,7 +25,7 @@ export class UserService {
       }
     });
   }
-  async login({ email, password }, req) {
+  async login({ email, password }) {
     const user = await prisma.user.findFirst({
       where: { email },
     });
@@ -35,7 +35,7 @@ export class UserService {
         return console.error(err);
       }
       if (isSame) {
-        console.log(req.session);
+        //console.log(req.session);
       }
     });
   }
@@ -87,5 +87,10 @@ export class UserService {
     } catch (err) {
       console.error(err);
     }
+  }
+  async findOne(email) {
+    await prisma.user.findFirst({
+      where: { email },
+    });
   }
 }
